@@ -6,16 +6,14 @@ pub fn part_one(input: String) -> i32 {
         games.push(Game::parse(line));
     });
 
-    let red_cubes = 12;
-    let green_cubes = 13;
-    let blue_cubes = 14;
+    let reds = 12;
+    let greens = 13;
+    let blues = 14;
 
     games
         .iter()
         .filter(|game| {
-            return game.max_red_cubes <= red_cubes
-                && game.max_green_cubes <= green_cubes
-                && game.max_blue_cubes <= blue_cubes;
+            return game.reds <= reds && game.greens <= greens && game.blues <= blues;
         })
         .map(|game| game.id)
         .sum()
@@ -24,9 +22,9 @@ pub fn part_one(input: String) -> i32 {
 #[derive(Debug)]
 struct Game {
     id: i32,
-    max_red_cubes: i32,
-    max_green_cubes: i32,
-    max_blue_cubes: i32,
+    reds: i32,
+    greens: i32,
+    blues: i32,
 }
 
 impl Game {
@@ -35,7 +33,6 @@ impl Game {
         const GREEN: &str = "green";
         const BLUE: &str = "blue";
 
-        // get the game id
         let parts: Vec<&str> = line.split(":").collect();
 
         let game_parts: Vec<&str> = parts[0].split(" ").collect();
@@ -79,9 +76,9 @@ impl Game {
 
         Game {
             id,
-            max_red_cubes,
-            max_green_cubes,
-            max_blue_cubes,
+            reds: max_red_cubes,
+            greens: max_green_cubes,
+            blues: max_blue_cubes,
         }
     }
 }
@@ -94,6 +91,16 @@ pub mod tests {
     fn example() {
         let input =
             std::fs::read_to_string(String::from("inputs/example.day_02_part_one.txt")).unwrap();
+
+        let expected = 8;
+        let result = part_one(input);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn real_input() {
+        let input = std::fs::read_to_string(String::from("inputs/day_02_part_one.txt")).unwrap();
 
         let expected = 8;
         let result = part_one(input);
