@@ -102,7 +102,7 @@ pub mod tests {
     fn real_input() {
         let input = std::fs::read_to_string(String::from("inputs/day_02_part_one.txt")).unwrap();
 
-        let expected = 8;
+        let expected = 0; // this will depend on real input
         let result = part_one(input);
 
         assert_eq!(expected, result);
