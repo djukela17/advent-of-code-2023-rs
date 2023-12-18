@@ -1,3 +1,5 @@
+use std::sync::atomic::Ordering::AcqRel;
+
 pub fn part_one(input: String) -> i32 {
     let mut schematic: Vec<Vec<char>> = Vec::new();
 
@@ -8,8 +10,6 @@ pub fn part_one(input: String) -> i32 {
             schematic[i].push(c);
         })
     });
-
-    println!("schematic.len() = {}", schematic.len());
 
     let mut sum = 0;
 
@@ -127,6 +127,162 @@ pub fn part_one(input: String) -> i32 {
     sum as i32
 }
 
+fn part_two(input: String) -> i32 {
+    let schematic = Schematic::new(input);
+
+    schematic.calculate_gear_ratio()
+}
+
+struct Schematic {
+    board: Vec<Vec<char>>,
+}
+
+impl Schematic {
+    fn new(input: String) -> Schematic {
+        Schematic {
+            board: input
+                .lines()
+                .filter(|line| line.len() > 0)
+                .map(|line| -> Vec<char> { line.chars().collect() })
+                .collect(),
+        }
+    }
+
+    // parse_number in N or W
+    fn parse_number(row: &Vec<char>, x: usize) -> Option<u32> {
+        // parse from start, going in E direction
+        let mut part_no: Option<u32> = None;
+        let mut pow = 1;
+
+        for i in x..row.len() {
+            let c = row[i];
+            if !c.is_digit(10) {
+                break;
+            }
+
+            let digit = c.to_digit(10).unwrap();
+
+            match part_no {
+                None => part_no = Some(digit),
+                Some(num) => part_no = Some(num * 10 + digit),
+            }
+
+            pow *= 10;
+        }
+
+        // parse any digit in the S direction
+        if let Some(mut num) = part_no {
+            for i in (0..x).rev() {
+                let c = row[i];
+                if !c.is_digit(10) {
+                    break;
+                }
+
+                let digit = c.to_digit(10).unwrap();
+
+                num += digit * pow;
+                pow *= 10;
+            }
+
+            return Some(num);
+        }
+
+        part_no
+    }
+
+    fn calculate_gear_ratio(&self) -> i32 {
+        let mut gear_ratio = 0;
+
+        for (y, row) in self.board.iter().enumerate() {
+            for (x, c) in row.iter().enumerate() {
+                if c == &'*' {
+                    let mut adjacent_part_numbers = vec![];
+
+                    // W
+                    if x > 0 {
+                        if let Some(part_no) = Schematic::parse_number(&row, x - 1) {
+                            if !adjacent_part_numbers.contains(&part_no) {
+                                adjacent_part_numbers.push(part_no);
+                            }
+                        }
+                    }
+
+                    // N
+                    if y > 0 {
+                        if let Some(part_no) = Schematic::parse_number(&self.board[y - 1], x) {
+                            if !adjacent_part_numbers.contains(&part_no) {
+                                adjacent_part_numbers.push(part_no);
+                            }
+                        }
+                    }
+
+                    // NW
+                    if y > 0 && x > 0 {
+                        if let Some(part_no) = Schematic::parse_number(&self.board[y - 1], x - 1) {
+                            if !adjacent_part_numbers.contains(&part_no) {
+                                adjacent_part_numbers.push(part_no);
+                            }
+                        }
+                    }
+
+                    // NE
+                    if y > 0 && x < row.len() - 1 {
+                        if let Some(part_no) = Schematic::parse_number(&self.board[y - 1], x + 1) {
+                            if !adjacent_part_numbers.contains(&part_no) {
+                                adjacent_part_numbers.push(part_no);
+                            }
+                        }
+                    }
+
+                    // E
+                    if x < row.len() - 1 {
+                        if let Some(part_no) = Schematic::parse_number(&row, x + 1) {
+                            if !adjacent_part_numbers.contains(&part_no) {
+                                adjacent_part_numbers.push(part_no);
+                            }
+                        }
+                    }
+
+                    // SW
+                    if y < self.board.len() - 1 && x > 0 {
+                        if let Some(part_no) = Schematic::parse_number(&self.board[y + 1], x - 1) {
+                            if !adjacent_part_numbers.contains(&part_no) {
+                                adjacent_part_numbers.push(part_no);
+                            }
+                        }
+                    }
+
+                    // SE
+                    if y < self.board.len() - 1 && x < row.len() - 1 {
+                        if let Some(part_no) = Schematic::parse_number(&self.board[y + 1], x + 1) {
+                            if !adjacent_part_numbers.contains(&part_no) {
+                                adjacent_part_numbers.push(part_no);
+                            }
+                        }
+                    }
+
+                    // S
+                    if y < self.board.len() - 1 {
+                        if let Some(part_no) = Schematic::parse_number(&self.board[y + 1], x) {
+                            if !adjacent_part_numbers.contains(&part_no) {
+                                adjacent_part_numbers.push(part_no);
+                            }
+                        }
+                    }
+
+                    if adjacent_part_numbers.len() > 1 {
+                        gear_ratio += adjacent_part_numbers
+                            .iter()
+                            .fold(1, |acc, part_no| acc * part_no);
+                    }
+                }
+            }
+        }
+
+        gear_ratio as i32
+    }
+}
+
 #[cfg(test)]
 pub mod tests {
     use super::*;
@@ -147,6 +303,26 @@ pub mod tests {
 
         let expected = 0; // this will depend on real input
         let result = part_one(input);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn part_two_example_input() {
+        let input = std::fs::read_to_string("inputs/example.day_03_part_one.txt").unwrap();
+
+        let result = part_two(input);
+        let expected = 467835;
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn part_two_real_input() {
+        let input = std::fs::read_to_string("inputs/day_03_part_one.txt").unwrap();
+
+        let result = part_two(input);
+        let expected = 0;
 
         assert_eq!(expected, result);
     }
