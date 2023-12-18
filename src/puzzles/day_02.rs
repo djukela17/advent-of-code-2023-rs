@@ -19,6 +19,15 @@ pub fn part_one(input: String) -> i32 {
         .sum()
 }
 
+pub fn part_two(input: String) -> i32 {
+    input
+        .trim()
+        .lines()
+        .map(|line| -> Game { Game::parse(line) })
+        .map(|game| -> i32 { game.reds * game.greens * game.blues })
+        .sum()
+}
+
 #[derive(Debug)]
 struct Game {
     id: i32,
@@ -89,8 +98,7 @@ pub mod tests {
 
     #[test]
     fn example() {
-        let input =
-            std::fs::read_to_string(String::from("inputs/example.day_02_part_one.txt")).unwrap();
+        let input = std::fs::read_to_string("inputs/example.day_02.txt").unwrap();
 
         let expected = 8;
         let result = part_one(input);
@@ -100,10 +108,28 @@ pub mod tests {
 
     #[test]
     fn real_input() {
-        let input = std::fs::read_to_string(String::from("inputs/day_02_part_one.txt")).unwrap();
+        let input = std::fs::read_to_string("inputs/day_02.txt").unwrap();
 
         let expected = 0; // this will depend on real input
         let result = part_one(input);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn part_two_example_input() {
+        let input = std::fs::read_to_string("inputs/example.day_02.txt").unwrap();
+        let result = part_two(input);
+        let expected = 2286;
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn part_two_real_input() {
+        let input = std::fs::read_to_string("inputs/day_02.txt").unwrap();
+        let result = part_two(input);
+        let expected = 0;
 
         assert_eq!(expected, result);
     }

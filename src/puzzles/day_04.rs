@@ -43,7 +43,6 @@ impl Card {
     pub fn calculate_points(&self) -> i32 {
         let mut pts = 0;
 
-
         for num in self.scratched_numbers.iter().as_ref() {
             if self.winning_numbers.contains(num) {
                 match pts {
