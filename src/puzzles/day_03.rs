@@ -60,7 +60,7 @@ pub fn part_one(input: String) -> i32 {
                 is_adjacent = false;
             } else {
                 // if this is the first number
-                if num == 0 && j < row.len()-1 {
+                if num == 0 && j < row.len() - 1 {
                     let j = j + 1;
                     // check all E eligible E-side coordinates
                     // if this is the first digit found, check all NE, E and SE for symbols
@@ -133,8 +133,7 @@ pub mod tests {
 
     #[test]
     fn example_input() {
-        let input =
-            std::fs::read_to_string("inputs/example.day_03_part_one.txt").unwrap();
+        let input = std::fs::read_to_string("inputs/example.day_03_part_one.txt").unwrap();
 
         let expected = 4361;
         let result = part_one(input);
