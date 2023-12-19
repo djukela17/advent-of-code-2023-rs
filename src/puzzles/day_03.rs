@@ -1,5 +1,3 @@
-use std::sync::atomic::Ordering::AcqRel;
-
 pub fn part_one(input: String) -> i32 {
     let mut schematic: Vec<Vec<char>> = Vec::new();
 

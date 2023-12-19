@@ -35,7 +35,7 @@ pub fn part_two(input: String) -> i32 {
             instances.insert(i, 1);
         }
 
-        let mut matching_numbers = card.count_matching_numbers();
+        let matching_numbers = card.count_matching_numbers();
 
         for n in 1..matching_numbers + 1 {
             if let Some(c) = instances.get(&(i + n as usize)) {
