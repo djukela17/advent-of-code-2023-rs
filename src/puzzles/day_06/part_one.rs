@@ -62,16 +62,28 @@ impl Race {
     pub fn new(time: i64, distance: i64) -> Race {
         Race { time, distance }
     }
-    pub fn count_ways_to_win(&self) -> i64{
-        let mut ways_to_win = 0;
 
-        for charge_time in 1..self.time {
+    pub fn count_ways_to_win(&self) -> i64 {
+        let mut ways_to_lose = 2;
+
+        for charge_time in 1..self.time / 2 {
             let distance_traveled = (self.time - charge_time) * charge_time;
             if distance_traveled > self.distance {
-                ways_to_win += 1;
+                break;
             }
+
+            ways_to_lose += 1;
         }
 
-        ways_to_win
+        for charge_time in (self.time / 2..self.time - 1).rev() {
+            let distance_traveled = (self.time - charge_time) * charge_time;
+            if distance_traveled > self.distance {
+                break;
+            }
+
+            ways_to_lose += 1;
+        }
+
+        self.time - ways_to_lose
     }
 }
