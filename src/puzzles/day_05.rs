@@ -227,4 +227,14 @@ mod tests {
 
         assert_eq!(expected, result);
     }
+
+    #[test]
+    fn part_two_example_input() {
+        let input = std::fs::read_to_string("inputs/example.day_05.txt").unwrap();
+
+        let expected = 46;
+        let result = part_two(input);
+
+        assert_eq!(expected, result);
+    }
 }
