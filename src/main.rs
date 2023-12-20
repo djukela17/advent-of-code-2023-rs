@@ -1,4 +1,5 @@
 use std::env;
+use std::time::SystemTime;
 
 use advent_of_code_2023_rs::puzzles;
 
@@ -25,6 +26,8 @@ fn main() {
         format!("inputs/example.day_{}.txt", day)
     };
 
+    let start = SystemTime::now();
+
     match day.as_str() {
         "05" => match part.as_str() {
             "one" => {
@@ -49,4 +52,6 @@ fn main() {
             return;
         }
     }
+
+    println!("time taken {:?}", start.elapsed().unwrap().as_secs());
 }

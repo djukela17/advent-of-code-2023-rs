@@ -1,4 +1,5 @@
 use std::str::Split;
+use std::time::SystemTime;
 
 pub fn part_one(input: String) -> i64 {
     let mut segments = input.split("\n\n");
