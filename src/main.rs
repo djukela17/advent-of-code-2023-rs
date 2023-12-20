@@ -55,6 +55,16 @@ fn main() {
 
                 println!("day {} part {} = {}", day, part, result)
             }
+
+            "two" => {
+                let puzzle = puzzles::day_06::part_two::Puzzle::new();
+                let input = std::fs::read_to_string(filename).unwrap();
+
+                let result = puzzle.run(input);
+
+                println!("day {} part {} = {}", day, part, result)
+            }
+
             _ => {
                 panic!("no such part");
             }

@@ -7,7 +7,7 @@ impl Puzzle {
     pub fn run(&self, input: String) -> i64 {
         let mut lines = input.lines();
 
-        let times: Vec<i32> = lines
+        let times: Vec<i64> = lines
             .next()
             .unwrap()
             .split(":")
@@ -20,7 +20,7 @@ impl Puzzle {
             .map(|num| num.parse().unwrap())
             .collect();
 
-        let distances: Vec<i32> = lines
+        let distances: Vec<i64> = lines
             .next()
             .unwrap()
             .split(":")
@@ -46,23 +46,26 @@ impl Puzzle {
 
         println!("{:?}", races);
 
-        races.iter().fold(1, |acc, race| {
-            acc * race.count_ways_to_win()
-        }) as i64
+        races
+            .iter()
+            .fold(1, |acc, race| acc * race.count_ways_to_win())
     }
 }
 
 #[derive(Debug)]
-struct Race {
-    time: i32,
-    distance: i32,
+pub struct Race {
+    time: i64,
+    distance: i64,
 }
 
 impl Race {
-    fn count_ways_to_win(&self) -> u32 {
+    pub fn new(time: i64, distance: i64) -> Race {
+        Race { time, distance }
+    }
+    pub fn count_ways_to_win(&self) -> i64{
         let mut ways_to_win = 0;
 
-        for charge_time  in 1..self.time {
+        for charge_time in 1..self.time {
             let distance_traveled = (self.time - charge_time) * charge_time;
             if distance_traveled > self.distance {
                 ways_to_win += 1;
