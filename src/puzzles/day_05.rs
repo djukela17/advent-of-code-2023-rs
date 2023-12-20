@@ -35,6 +35,82 @@ pub fn part_one(input: String) -> i64 {
     closest.unwrap().1
 }
 
+pub fn part_two(input: String) -> i64 {
+    let mut segments = input.split("\n\n");
+
+    let seed_ids = SeedRanges::new(segments.next().unwrap());
+
+    let chain = Chain::new(segments);
+
+    let mut closest: Option<i64> = None;
+
+    for seed_range in seed_ids.ranges.iter() {
+        for seed_id in seed_range.start..seed_range.start + seed_range.len {
+            match closest {
+                None => closest = Some(chain.dest_for(seed_id)),
+                Some(closest_loc) => {
+                    let location = chain.dest_for(seed_id);
+
+                    if location < closest_loc {
+                        closest = Some(location);
+                    }
+                }
+            }
+        }
+    }
+
+    closest.unwrap()
+}
+
+#[derive(Debug)]
+struct Range {
+    start: i64,
+    len: i64,
+}
+
+#[derive(Debug)]
+struct SeedRanges {
+    ranges: Vec<Range>,
+}
+
+impl SeedRanges {
+    fn new(input: &str) -> SeedRanges {
+        let mut seed_id: Option<i64> = None;
+        let mut len: Option<i64> = None;
+
+        let mut ranges = vec![];
+
+        input
+            .split(":")
+            .skip(1)
+            .next()
+            .unwrap()
+            .trim()
+            .split(" ")
+            .for_each(|num| {
+                if seed_id == None {
+                    seed_id = Some(num.trim().parse().unwrap());
+
+                    return;
+                }
+
+                if len == None {
+                    len = Some(num.trim().parse().unwrap());
+                }
+
+                ranges.push(Range {
+                    start: seed_id.unwrap(),
+                    len: len.unwrap(),
+                });
+
+                seed_id = None;
+                len = None;
+            });
+
+        SeedRanges { ranges }
+    }
+}
+
 #[derive(Debug)]
 struct Chain {
     maps: Vec<SrcToDestRangeMap>,
