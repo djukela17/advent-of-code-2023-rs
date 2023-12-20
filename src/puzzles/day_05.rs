@@ -117,7 +117,7 @@ struct Chain {
 }
 
 impl Chain {
-    fn new(mut segments: Split<&str>) -> Chain {
+    fn new(segments: Split<&str>) -> Chain {
         Chain {
             maps: segments
                 .map(|segment| SrcToDestRangeMap::new(segment))
