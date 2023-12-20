@@ -46,6 +46,19 @@ fn main() {
                 return;
             }
         },
+        "06" => match part.as_str() {
+            "one" => {
+                let puzzle = puzzles::day_06::part_one::Puzzle::new();
+                let input = std::fs::read_to_string(filename).unwrap();
+
+                let result = puzzle.run(input);
+
+                println!("day {} part {} = {}", day, part, result)
+            }
+            _ => {
+                panic!("no such part");
+            }
+        },
         _ => {
             println!("no solution for selected day");
 
@@ -53,5 +66,5 @@ fn main() {
         }
     }
 
-    println!("time taken {:?}", start.elapsed().unwrap().as_secs());
+    println!("time taken {}ms", start.elapsed().unwrap().as_millis());
 }
