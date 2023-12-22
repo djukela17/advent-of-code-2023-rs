@@ -64,10 +64,20 @@ fn main() {
 
                 println!("day {} part {} = {}", day, part, result)
             }
+            _ => panic!("no such part"),
+        },
+        "07" => match part.as_str() {
+            "one" => {
+                let puzzle = puzzles::day_07::part_one::Puzzle::new();
 
-            _ => {
-                panic!("no such part");
+                println!(
+                    "day {} part {} = {}",
+                    day,
+                    part,
+                    puzzle.run(std::fs::read_to_string(filename).unwrap())
+                );
             }
+            _ => panic!("no such part"),
         },
         _ => {
             println!("no solution for selected day");
