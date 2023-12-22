@@ -77,6 +77,17 @@ fn main() {
                     puzzle.run(std::fs::read_to_string(filename).unwrap())
                 );
             }
+            "two" => {
+                let puzzle = puzzles::day_07::part_two::Puzzle::new();
+
+                println!(
+                    "day {} part {} = {}",
+                    day,
+                    part,
+                    puzzle.run(std::fs::read_to_string(filename).unwrap())
+                );
+            }
+
             _ => panic!("no such part"),
         },
         _ => {
